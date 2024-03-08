@@ -1,0 +1,16 @@
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 200%;
+  border: 0.18rem solid red;
+  cursor: pointer;
+}
+.profile-box {
+  display: flex;
+  background-color: aqua;
+  align-items: center;
+  padding: 1rem;
+}
+.profile-name {
+  padding-left: 1rem;
+}
