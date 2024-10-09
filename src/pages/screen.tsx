@@ -1,124 +1,135 @@
-import { useState, useEffect, useRef } from "react";
-import { getAuth, signOut } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { app, db, imagemDb } from "./firebase-auth";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
-import "./screen.css";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "./firebase-auth";
 import Dados from "./info-adoção";
+import Editdados from "./edit";
+import "./screen.css";
+import Navbar from "./header";
 
-const Imagem = () => {
+const Imagem = ({ currentUser }) => {
   const [userName, setUserName] = useState("");
   const [show, setShow] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [animalInfo, setAnimalInfo] = useState({});
-  const hiddenFileInput = useRef(null);
+  const [ads, setAds] = useState([]);
+  const [editingAd, setEditingAd] = useState(null);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const toggleModal = () => setShow(!show);
 
-  const handlelogout = async () => {
+  const fetchUserAds = useCallback(async (userId) => {
     try {
-      const auth = getAuth();
-      await signOut(auth);
-      window.location.href = "/";
+      const userDoc = await getDoc(doc(db, "users", userId));
+
+      if (!userDoc.exists()) {
+        console.error("Documento de usuário não encontrado.");
+        return;
+      }
+
+      const userData = userDoc.data();
+      setUserName(userData.name);
+      setImageUrl(userData.profilePic);
+
+      const q = query(collection(db, "ads"), where("userId", "==", userId));
+      const querySnapshot = await getDocs(q);
+
+      setAds(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     } catch (error) {
-      console.error("erro ao fazer logout");
+      console.error("Erro ao buscar os dados do usuário: ", error);
+    }
+  }, []);
+
+  const handleDelete = async (adId) => {
+    try {
+      await deleteDoc(doc(db, "ads", adId));
+      setAds((prevAds) => prevAds.filter((ad) => ad.id !== adId));
+    } catch (error) {
+      console.error("Erro ao deletar o anúncio: ", error);
     }
   };
 
-  const handleClick = (event) => {
-    hiddenFileInput.current.click();
-  };
+  const handleEdit = (adId) => setEditingAd(adId);
 
-  const handleChange = (event) => {
-    const file = event.target.files[0];
-    setProfilePic(file);
-    handleUpload(file);
-  };
-
-  const handleUpload = async (file) => {
-    const userId = sessionStorage.getItem("userId");
-    const storageRef = ref(imagemDb, "profilePics/" + userId);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.error("Erro no upload da imagem", error.message);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageUrl(downloadURL);
-          const userRef = doc(db, "users", userId);
-          updateDoc(userRef, { profilePic: downloadURL });
-        });
-      }
-    );
+  const handleSaveEdit = async (adId, updatedData) => {
+    try {
+      await updateDoc(doc(db, "ads", adId), updatedData);
+      setEditingAd(null);
+    } catch (error) {
+      console.error("Erro ao salvar a edição: ", error);
+    }
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userId = sessionStorage.getItem("userId");
-
-      if (userId) {
-        const userDoc = await getDoc(doc(db, "users", userId));
-
-        if (userDoc.exists()) {
-          setUserName(userDoc.data().name);
-          setImageUrl(userDoc.data().profilePic);
-          setAnimalInfo({
-            animalType: userDoc.data().animalType,
-            animalBreed: userDoc.data().animalBreed,
-            animalAge: userDoc.data().animalAge,
-            donationReason: userDoc.data().donationReason,
-          });
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
+    const userId = sessionStorage.getItem("userId");
+    if (userId) {
+      fetchUserAds(userId);
+    } else {
+      console.error("User ID não encontrado na sessão");
+    }
+  }, [fetchUserAds, currentUser]);
 
   return (
-    <div>
-      <div className="profile-box">
-        {imageUrl && (
-          <img
-            className="profile-pic"
-            src={imageUrl}
-            alt="Imagem de perfil"
-            onClick={handleClick}
-          />
-        )}
-        <input
-          type="file"
-          ref={hiddenFileInput}
-          onChange={handleChange}
-          style={{ display: "none" }}
-        />
-        <h3 className="profile-name">{userName || "Usuário"}!</h3>
+    <div className="con-profile">
+      <Navbar />
+      <div className="box-box">
+        <Button
+          className="button-addition"
+          variant="primary"
+          onClick={toggleModal}
+        >
+          +
+        </Button>
+        {ads.map((ad) => (
+          <div key={ad.id} className="box-dados">
+            <h3>Informações do Animal:</h3>
+            {ad.imageUrl ? (
+              <img
+                src={ad.imageUrl}
+                alt="Imagem do animal"
+                style={{ width: "250px", height: "200px" }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "default-image-url";
+                }}
+              />
+            ) : (
+              <p>Imagem não disponível</p>
+            )}
+            <p>Nome: {ad.animalName}</p>
+            <p>Tipo: {ad.animalType}</p>
+            <p>Raça: {ad.animalBreed}</p>
+            <p>Idade: {ad.animalAge}</p>
+            <p>Motivo da doação: {ad.donationReason}</p>
+            <button className="button-dados" onClick={() => handleEdit(ad.id)}>
+              Editar
+            </button>
+            <button
+              className="button-dados"
+              onClick={() => handleDelete(ad.id)}
+            >
+              Excluir
+            </button>
+          </div>
+        ))}
       </div>
 
-      {animalInfo.animalType && (
-        <div>
-          <h3>Informações do Animal:</h3>
-          <p>Tipo: {animalInfo.animalType}</p>
-          <p>Raça: {animalInfo.animalBreed}</p>
-          <p>Idade: {animalInfo.animalAge}</p>
-          <p>Motivo da doação: {animalInfo.donationReason}</p>
-        </div>
+      <Dados show={show} handleClose={toggleModal} />
+      {editingAd && (
+        <Editdados
+          show={true}
+          handleClose={() => setEditingAd(null)}
+          adData={ads.find((ad) => ad.id === editingAd)}
+          handleSave={handleSaveEdit}
+        />
       )}
-      <Button variant="primary" onClick={handleShow}>
-        Abrir Modal
-      </Button>
-      <Button variant="danger" onClick={handlelogout}>
-        Logout
-      </Button>
-
-      <Dados show={show} handleClose={handleClose} />
     </div>
   );
 };

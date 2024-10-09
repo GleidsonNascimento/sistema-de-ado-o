@@ -15,7 +15,9 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.3"
+    "react-router-dom": "^6.23.1",
+    "sistema-de-adocao": "file:",
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

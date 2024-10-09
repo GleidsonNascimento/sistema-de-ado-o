@@ -39,16 +39,12 @@ const Register = () => {
           );
 
           const userId = userCredential.user.uid;
-
-          // Armazene o userId no sessionStorage após o registro bem-sucedido
           sessionStorage.setItem("userId", userId);
 
           await setDoc(doc(db, "users", userId), {
             userId,
             name,
           });
-
-          // Redireciona para a página após o login
           history("/img");
         } catch (error) {
           console.error("Erro no registro", error.message);
@@ -56,15 +52,12 @@ const Register = () => {
       };
       const userId = userCredential.user.uid;
 
-      // Armazene o userId no sessionStorage após o registro bem-sucedido
       sessionStorage.setItem("userId", userId);
 
       await setDoc(doc(db, "users", userId), {
         userId,
         name,
       });
-
-      // Redireciona para a página após o login
       history("/img");
     } catch (error) {
       console.error("Erro no registro", error.message);

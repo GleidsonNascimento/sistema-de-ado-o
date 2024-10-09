@@ -1,0 +1,20 @@
+.profile-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 2.3rem;
+}
+
+.profile-box img {
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer;
+  border-radius: 100rem;
+}
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
