@@ -1,0 +1,43 @@
+.con-bg-list {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.con-bg-list h1 {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.con-list {
+  display: flex;
+  width: 352px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  row-gap: 0.3rem;
+  border: solid 2px black;
+  border-radius: 1.5rem;
+  background-color: antiquewhite;
+  margin: 4.5rem;
+  justify-content: baseline;
+}
+
+.con-list img {
+  width: 350px;
+  height: 350px;
+  border-radius: 1rem;
+}
+
+.con-list-info {
+  font-size: 23px;
+  padding: 0.5rem;
+}
+
+.con-align-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 90%;
+  margin: auto;
+}

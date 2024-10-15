@@ -16,8 +16,7 @@ export default function Navbar() {
         <Link to="/img">Minhas adoções</Link>
       </p>
       <p>
-        {" "}
-        <Link to="ListaDeAnimais">Lista de animais</Link>
+        <Link to="/ListaDeAnimais">Lista de animais</Link>
       </p>
       <UserProfile />
     </nav>
