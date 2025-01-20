@@ -7,6 +7,7 @@ import {
   getDownloadURL,
   getStorage,
 } from "firebase/storage";
+import locations from "./utilitarios/locais";
 import { db } from "./firebase-auth";
 import "./modal.css";
 
@@ -17,8 +18,10 @@ const Dados = ({ show, handleClose }) => {
   const [donationReason, setDonationReason] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [animalName, setAnimalName] = useState("");
-  const [loading, setLoading] = useState(false); // Novo estado de carregamento
-  const [error, setError] = useState(""); // Novo estado de erro
+  const [sex, setSex] = useState("");
+  const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const storage = getStorage();
 
@@ -30,8 +33,8 @@ const Dados = ({ show, handleClose }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Limpa erros anteriores
-    setLoading(true); // Ativa o estado de carregamento
+    setError("");
+    setLoading(true);
     const userId = sessionStorage.getItem("userId");
 
     if (
@@ -41,9 +44,11 @@ const Dados = ({ show, handleClose }) => {
       !animalType ||
       !animalBreed ||
       !animalAge ||
-      !donationReason
+      !donationReason ||
+      !location ||
+      !sex
     ) {
-      setError("Todos os campos são obrigatórios."); // Validação de campos
+      setError("Todos os campos são obrigatórios.");
       setLoading(false);
       return;
     }
@@ -54,9 +59,7 @@ const Dados = ({ show, handleClose }) => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-          // Aqui, você pode adicionar lógica de progresso, se desejar.
-        },
+        (snapshot) => {},
         (error) => {
           setError("Erro ao carregar a imagem.");
           setLoading(false);
@@ -70,16 +73,18 @@ const Dados = ({ show, handleClose }) => {
             animalBreed,
             animalAge,
             donationReason,
+            location,
+            sex,
             imageUrl: downloadURL,
           });
 
-          setLoading(false); // Desativa o estado de carregamento
-          handleClose(); // Fecha o modal após o sucesso
+          setLoading(false);
+          handleClose();
         }
       );
     } catch (error) {
       setError("Erro ao salvar as informações.");
-      setLoading(false); // Desativa o estado de carregamento em caso de erro
+      setLoading(false);
     }
   };
 
@@ -126,6 +131,24 @@ const Dados = ({ show, handleClose }) => {
             onChange={(e) => setDonationReason(e.target.value)}
             placeholder="ex: não tenho mais espaço"
           />
+          <label>qual sexo do animal</label>
+          <select value={sex} onChange={(e) => setSex}>
+            <option value="">Qual sexo?</option>
+            <option value={sex}>Femea</option>
+            <option value={sex}>Macho</option>
+          </select>
+          <label>Local onde o animal está</label>
+          <select
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          >
+            <option value="">selecione o local</option>
+            {locations.map((loc, index) => (
+              <option key={index} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
           <label>Foto do animal</label>
           <input type="file" onChange={handleImageChange} />
           <Button type="submit" disabled={loading}>

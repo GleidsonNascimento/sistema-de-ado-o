@@ -5,7 +5,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  background-color: white;
+  background-color: #f3de2c;
 }
 .navbar p {
   font-size: 34px;
@@ -23,5 +23,6 @@
 
 .img-nav {
   width: 4.2rem;
+  margin-left: 0.6rem;
   transform: rotate(320deg);
 }

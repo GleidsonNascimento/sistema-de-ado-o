@@ -11,12 +11,13 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "./firebase-auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Dados from "./info-adoção";
 import Editdados from "./edit";
 import "./screen.css";
 import Navbar from "./header";
 
-const Imagem = ({ currentUser }) => {
+const Imagem = () => {
   const [userName, setUserName] = useState("");
   const [show, setShow] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -68,13 +69,18 @@ const Imagem = ({ currentUser }) => {
   };
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("userId");
-    if (userId) {
-      fetchUserAds(userId);
-    } else {
-      console.error("User ID não encontrado na sessão");
-    }
-  }, [fetchUserAds, currentUser]);
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userId = user.uid;
+        fetchUserAds(userId);
+      } else {
+        console.error("Usuário não está autenticado.");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [fetchUserAds]);
 
   return (
     <div className="con-profile">

@@ -4,9 +4,32 @@ import { db } from "./firebase-auth";
 import "./HomePage.css";
 import Navbar from "./header";
 import Banner from "./banner";
+import catImg from "../assets/cat.png";
+import dogImg from "../assets/dog.png";
+import defaultImg from "../assets/animal.png";
+interface Animal {
+  id: string;
+  animalName: string;
+  animalBreed: string;
+  animalAge: number;
+  animalType: string;
+  imageUrl?: string;
+  ownerName: string;
+}
 
 const HomePage = () => {
-  const [allAnimals, setAllAnimals] = useState([]);
+  const [allAnimals, setAllAnimals] = useState<Animal[]>([]);
+
+  const getAnimalRepresentationImage = (animal: Animal) => {
+    switch (animal.animalType) {
+      case "Gato":
+        return catImg;
+      case "Cachorro":
+        return dogImg;
+      default:
+        return defaultImg;
+    }
+  };
 
   useEffect(() => {
     const fetchAllAnimals = async () => {
@@ -16,6 +39,7 @@ const HomePage = () => {
           id: doc.id,
           ...doc.data(),
         }));
+
         const animalsWithOwners = await Promise.all(
           animals.map(async (animal) => {
             if (!animal.userId) {
@@ -37,7 +61,6 @@ const HomePage = () => {
             }
           })
         );
-
         const latestAnimal = animalsWithOwners.slice(-4).reverse();
 
         setAllAnimals(latestAnimal);
@@ -66,7 +89,7 @@ const HomePage = () => {
             <div className="animal-info">
               <div className="animal-p">
                 <p>
-                  <span>Nome:</span> {animal.animalType}
+                  <span>Nome:</span> {animal.animalName}
                 </p>
                 <p>
                   <span>Raça:</span>
@@ -79,6 +102,11 @@ const HomePage = () => {
                   <span>Dono:</span>
                   {animal.ownerName}
                 </p>
+                <img
+                  src={getAnimalRepresentationImage(animal)}
+                  alt={`Representação de um ${animal.animalType}`}
+                  className="animal-representation-image"
+                />
               </div>
             </div>
           </div>

@@ -1,20 +1,68 @@
 .profile-box {
   display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 5px;
-  margin-right: 2.3rem;
 }
 
-.profile-box img {
-  width: 4rem;
-  height: 4rem;
-  cursor: pointer;
-  border-radius: 100rem;
-}
 .profile-pic {
-  width: 50px;
-  height: 50px;
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
-  margin-right: 10px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.profile-pic:hover {
+  transform: scale(1.15);
+}
+
+.placeholder-pic {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background-color: #ccc9c9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.profile-info {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.btn-logout {
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .profile-box {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .profile-pic,
+  .placeholder-pic {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name {
+    font-size: 18px;
+  }
+
+  .btn-logout {
+    font-size: 14px;
+  }
 }
