@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 import { db } from "./firebase-auth";
 import "./HomePage.css";
 import Navbar from "./header";
@@ -112,7 +113,9 @@ const HomePage = () => {
           </div>
         ))}
         <button className="button-list-animal">
-          Para olhar a lista completa de animais para adoção
+          <Link to="/ListaDeAnimais" className="no-underline">
+            Para olhar a lista completa de animais para adoção
+          </Link>
         </button>
       </div>
     </div>

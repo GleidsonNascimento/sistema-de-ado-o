@@ -2,7 +2,6 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  padding: 20px;
 }
 
 .con-bg-list h1 {
@@ -40,4 +39,27 @@
   justify-content: center;
   width: 90%;
   margin: auto;
+}
+
+.filter-container {
+  display: flex;
+  width: 65rem;
+  height: 3rem;
+  font-size: 1.8rem;
+  align-items: center;
+  margin: auto;
+  margin-top: 0.8rem;
+  justify-content: center;
+}
+.filter-container label {
+  margin-right: 0.6rem;
+  margin-left: 0.6rem;
+}
+
+.filter-container select {
+  font-size: 1.1rem;
+}
+
+.filter-container option {
+  font-size: 1.1rem;
 }

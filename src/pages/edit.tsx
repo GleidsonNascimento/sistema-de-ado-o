@@ -12,6 +12,7 @@ const Editdados = ({ show, handleClose, adData, handleSave }) => {
   const [animalAge, setAnimalAge] = useState(adData.animalAge);
   const [donationReason, setDonationReason] = useState(adData.donationReason);
   const [location, setLocation] = useState(adData.location);
+  const [size, setSize] = useState(adData.size);
   const [sex, setSex] = useState(adData.sex);
 
   const handleFormSubmit = (e) => {
@@ -24,6 +25,7 @@ const Editdados = ({ show, handleClose, adData, handleSave }) => {
       donationReason,
       location,
       sex,
+      size,
     });
     handleClose();
   };
@@ -60,11 +62,18 @@ const Editdados = ({ show, handleClose, adData, handleSave }) => {
           onChange={(e) => setAnimalAge(e.target.value)}
           placeholder="ex 1 ano, 2 anos"
         />
+        <label>Qual tamanho do animal?</label>
+        <select value={size} onChange={(e) => setSize(e.target.value)}>
+          <option value="">Qual tamanho?</option>
+          <option value="Pequeno">Pequeno</option>
+          <option value="Medio">Medio</option>
+          <option value="Grande">Grande</option>
+        </select>
         <label>qual sexo do animal</label>
-        <select value={sex} onChange={(e) => setSex}>
+        <select value={sex} onChange={(e) => setSex(e.target.value)}>
           <option value="">Qual sexo?</option>
-          <option value={sex}>Femea</option>
-          <option value={sex}>Macho</option>
+          <option value="Femea">Femea</option>
+          <option value="Macho">Macho</option>
         </select>
         <label>Local onde o animal está</label>
         <select value={location} onChange={(e) => setLocation(e.target.value)}>

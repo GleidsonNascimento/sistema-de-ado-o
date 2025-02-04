@@ -21,6 +21,7 @@ const Dados = ({ show, handleClose }) => {
   const [sex, setSex] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [size, setSize] = useState("");
   const [error, setError] = useState("");
 
   const storage = getStorage();
@@ -35,20 +36,65 @@ const Dados = ({ show, handleClose }) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     const userId = sessionStorage.getItem("userId");
 
-    if (
-      !userId ||
-      !imageFile ||
-      !animalName ||
-      !animalType ||
-      !animalBreed ||
-      !animalAge ||
-      !donationReason ||
-      !location ||
-      !sex
-    ) {
-      setError("Todos os campos são obrigatórios.");
+    if (!userId) {
+      setError("Usuário não está autenticado.");
+      setLoading(false);
+      return;
+    }
+
+    if (!size) {
+      setError("Selecione um tamanho");
+      setLoading(false);
+      return;
+    }
+
+    if (!imageFile) {
+      setError("Selecione uma imagem para o animal.");
+      setLoading(false);
+      return;
+    }
+
+    if (animalName.trim() === "") {
+      setError("O campo 'Nome do animal' é obrigatório.");
+      setLoading(false);
+      return;
+    }
+
+    if (animalType.trim() === "") {
+      setError("O campo 'Tipo de animal' é obrigatório.");
+      setLoading(false);
+      return;
+    }
+
+    if (animalBreed.trim() === "") {
+      setError("O campo 'Raça' é obrigatório.");
+      setLoading(false);
+      return;
+    }
+
+    if (animalAge.trim() === "") {
+      setError("O campo 'Idade' é obrigatório.");
+      setLoading(false);
+      return;
+    }
+
+    if (donationReason.trim() === "") {
+      setError("O campo 'Motivo da doação' é obrigatório.");
+      setLoading(false);
+      return;
+    }
+
+    if (sex.trim() === "") {
+      setError("Selecione o sexo do animal.");
+      setLoading(false);
+      return;
+    }
+
+    if (location.trim() === "") {
+      setError("Selecione o local onde o animal está.");
       setLoading(false);
       return;
     }
@@ -59,8 +105,9 @@ const Dados = ({ show, handleClose }) => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {},
+        () => {},
         (error) => {
+          console.error("Erro ao carregar a imagem:", error);
           setError("Erro ao carregar a imagem.");
           setLoading(false);
         },
@@ -75,6 +122,7 @@ const Dados = ({ show, handleClose }) => {
             donationReason,
             location,
             sex,
+            size,
             imageUrl: downloadURL,
           });
 
@@ -83,6 +131,7 @@ const Dados = ({ show, handleClose }) => {
         }
       );
     } catch (error) {
+      console.error("Erro ao salvar as informações:", error);
       setError("Erro ao salvar as informações.");
       setLoading(false);
     }
@@ -131,18 +180,25 @@ const Dados = ({ show, handleClose }) => {
             onChange={(e) => setDonationReason(e.target.value)}
             placeholder="ex: não tenho mais espaço"
           />
-          <label>qual sexo do animal</label>
-          <select value={sex} onChange={(e) => setSex}>
+          <label>Qual sexo do animal</label>
+          <select value={sex} onChange={(e) => setSex(e.target.value)}>
             <option value="">Qual sexo?</option>
-            <option value={sex}>Femea</option>
-            <option value={sex}>Macho</option>
+            <option value="Fêmea">Fêmea</option>
+            <option value="Macho">Macho</option>
+          </select>
+          <label>Qual tamanho do animal</label>
+          <select value={size} onChange={(e) => setSize(e.target.value)}>
+            <option value="">Qual tamanho?</option>
+            <option value="Pequeno">Pequeno</option>
+            <option value="Medio">Medio</option>
+            <option value="Grande">Grande</option>
           </select>
           <label>Local onde o animal está</label>
           <select
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           >
-            <option value="">selecione o local</option>
+            <option value="">Selecione o local</option>
             {locations.map((loc, index) => (
               <option key={index} value={loc}>
                 {loc}

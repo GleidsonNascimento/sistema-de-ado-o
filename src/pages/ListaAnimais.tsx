@@ -3,20 +3,28 @@ import { collection, getDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "./firebase-auth";
 import "./ListaAnimais.css";
 import Navbar from "./header";
-import route from "./route";
+import locations from "./utilitarios/locais";
 import { useNavigate } from "react-router-dom";
 
 interface Animal {
+  userId: string;
   id: string;
   animalType: string;
   animalBreed: string;
   animalAge: string;
+  size?: string;
   ownerName: string;
+  location?: string;
   imageUrl?: string;
 }
 
+const sizes = ["Pequeno", "Medio", "Grande"];
+
 export default function ListAnimal() {
   const [allAnimals, setAllAnimals] = useState<Animal[]>([]);
+  const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const navigation = useNavigate();
 
   useEffect(() => {
@@ -38,7 +46,12 @@ export default function ListAnimal() {
               const ownerName = userDoc.exists()
                 ? userDoc.data().name
                 : "Desconhecido";
-              return { ...animal, ownerName };
+              return {
+                ...animal,
+                ownerName,
+                location: animal.location || "Não informado",
+                size: animal.size || "Não informado",
+              };
             } catch (userError) {
               console.error(
                 `Error ao procurar Id do animal ${animal.id}:`,
@@ -48,7 +61,7 @@ export default function ListAnimal() {
             }
           })
         );
-
+        setFilteredAnimals(animalsWithOwners);
         setAllAnimals(animalsWithOwners);
       } catch (error) {
         console.error("erro ao procurar informações do animal:", error);
@@ -57,6 +70,18 @@ export default function ListAnimal() {
     fetchAllAnimals();
   }, []);
 
+  useEffect(() => {
+    const filtered = allAnimals
+      .filter((animal) =>
+        selectedLocation ? animal.location?.includes(selectedLocation) : true
+      )
+      .filter((animal) =>
+        selectedSize ? animal.size?.includes(selectedSize) : true
+      );
+
+    setFilteredAnimals(filtered);
+  }, [selectedLocation, selectedSize, allAnimals]);
+
   const handleAnimalClick = (id: string) => {
     navigation(`/animal/${id}`);
   };
@@ -64,8 +89,38 @@ export default function ListAnimal() {
     <div className="con-bg-list">
       <Navbar />
       <h1>Todos os animais para adoção</h1>
+
+      <div className="filter-container">
+        <label htmlFor="location-select">Localização</label>
+        <select
+          id="location-select"
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+        >
+          <option value="">todas as localizações</option>
+          {locations.map((location, index) => (
+            <option key={index} value={location}>
+              {location}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="size-select">Tamanho:</label>
+        <select
+          id="size-select"
+          value={selectedSize}
+          onChange={(e) => setSelectedSize(e.target.value)}
+        >
+          <option value="">Todos os tamanhos</option>
+          {sizes.map((size, index) => (
+            <option key={index} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="con-align-list">
-        {allAnimals.map((animal) => (
+        {filteredAnimals.map((animal) => (
           <div
             className="con-list"
             key={animal.id}
@@ -92,6 +147,9 @@ export default function ListAnimal() {
                 <p>
                   <span>Dono:</span>
                   {animal.ownerName}
+                </p>
+                <p>
+                  <span>localização:</span> {animal.location}
                 </p>
               </div>
             </div>

@@ -13,7 +13,15 @@ const Login = () => {
     const auth = getAuth(app);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const userId = userCredential.user.uid;
+
+      sessionStorage.setItem("userId", userId);
+
       history("/img");
     } catch (error) {
       console.error("Erro no login", error.message);

@@ -78,6 +78,11 @@
 .button-list-animal:hover {
   background-color: #f5ac2e;
   transition: transform 0.3s;
+  text-decoration: none;
+}
+.button-list-animal a {
+  text-decoration: none;
+  color: red;
 }
 
 .animal-p img {
