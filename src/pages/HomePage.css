@@ -16,7 +16,7 @@
   transform: rotateY(180deg);
 }
 
-.animal-info {
+.home-animal-info {
   position: absolute;
   border-radius: 2rem;
   margin: auto;
@@ -47,7 +47,7 @@
   padding-right: 0.3rem;
 }
 
-.animal-card:hover .animal-info {
+.animal-card:hover .home-animal-info {
   transform: rotateY(0);
   opacity: 1;
 }

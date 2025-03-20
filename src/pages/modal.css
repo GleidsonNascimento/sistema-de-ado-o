@@ -1,31 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 .box-modal {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #e98d8d;
-  width: 80%;
-  height: 80%;
+  background-color: #dfada7;
+  width: 85%;
+  height: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   box-sizing: border-box;
+  z-index: 2099;
+  overflow: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
-
+.titulo-modal {
+  text-align: center;
+  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding: 1rem;
+}
 .box-modal input {
   margin: 10px 0;
   width: 100%;
+  height: auto;
   padding: 0.9rem;
+  font-size: 17px;
 }
-
+.box-modal select {
+  margin: 10px 0;
+  width: 106%;
+  padding: 0.6rem;
+  font-size: 18px;
+  font-family: "Roboto", sans-serif;
+}
+textarea {
+  margin: 10px 0;
+  width: 100%;
+  padding: 0.9rem;
+  font-family: "Roboto", sans-serif;
+  resize: none;
+  overflow: hidden;
+  min-height: 3rem;
+  max-height: 6rem;
+  font-size: 17px;
+}
 .box-modal form {
   width: 50%;
   margin: auto;
 }
 .box-modal h2 {
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
+}
+.close {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  top: 0;
+  right: 0;
+  margin-right: 2rem;
+  font-size: 24px;
+  cursor: pointer;
+}
+.label {
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.button-save {
+  margin-top: -1.2rem;
+  margin-bottom: 1rem;
+}
+.characteristics-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  width: 42rem;
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.characteristic-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 8px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(224, 103, 103, 0.1);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  transition: 0.2s ease-in-out;
+  border: 1px solid black;
+}
+
+.characteristic-label:hover {
+  background: #dadcdd;
+  color: black;
+}
+.option-title {
+  width: 90rem;
+}
+
+.characteristic-label.active {
+  background: #005ab4;
+  color: white;
+  border-bottom: solid 6px rgb(5, 175, 5);
+}
+
+.characteristic-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.label-title {
+  font-size: 24px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

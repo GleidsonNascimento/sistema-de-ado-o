@@ -2,42 +2,52 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  background-color: rgb(255, 253, 162);
+  height: 100vh;
+  height: 100%;
 }
 
 .con-bg-list h1 {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .con-list {
   display: flex;
-  width: 352px;
+  width: 18rem;
   flex-wrap: wrap;
   gap: 1rem;
-  row-gap: 0.3rem;
+  row-gap: 0.5rem;
   border: solid 2px black;
   border-radius: 1.5rem;
-  background-color: antiquewhite;
-  margin: 4.5rem;
+  background-color: rgb(255, 210, 8);
+  margin: 3rem;
   justify-content: baseline;
+  cursor: pointer;
 }
 
 .con-list img {
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  height: 250px;
+  border-bottom: 2px solid black;
   border-radius: 1rem;
 }
 
 .con-list-info {
+  padding: 1rem;
+}
+
+.con-list-info p {
   font-size: 23px;
-  padding: 0.5rem;
+  font-family: arial;
+  margin-bottom: 1rem;
 }
 
 .con-align-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 90%;
+  width: 95%;
   margin: auto;
 }
 
@@ -50,6 +60,7 @@
   margin: auto;
   margin-top: 0.8rem;
   justify-content: center;
+  font-family: "Times New Roman", Times, serif;
 }
 .filter-container label {
   margin-right: 0.6rem;
@@ -57,9 +68,13 @@
 }
 
 .filter-container select {
-  font-size: 1.1rem;
+  font-size: 20px;
+  padding: 0.2rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 .filter-container option {
-  font-size: 1.1rem;
+  font-size: 20px;
+  padding: 0.2rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }

@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import Imagem from "./screen";
 import { Login } from "./login";
 import Register from "./cadastro";

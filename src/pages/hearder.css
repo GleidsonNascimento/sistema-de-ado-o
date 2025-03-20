@@ -5,7 +5,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  background-color: #f3de2c;
+  background-color: #e25301;
 }
 .navbar p {
   font-size: 34px;
@@ -15,9 +15,10 @@
   text-decoration: none;
   color: black;
   padding: 0 10px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 .navbar a:hover {
-  color: tomato;
+  color: rgb(245, 243, 242);
   transition: 0.2s;
 }
 

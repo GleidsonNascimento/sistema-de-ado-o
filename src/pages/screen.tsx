@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   doc,
   getDoc,
@@ -12,75 +13,93 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase-auth";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Dados from "./info-adoção";
+import Dados from "./Modal-de-adicionar";
 import Editdados from "./edit";
 import "./screen.css";
 import Navbar from "./header";
+import { capitalizeWord } from "./utilitarios/capslock";
+
+interface Ad {
+  id: string;
+  animalName: string;
+  animalType: string;
+  animalBreed: string;
+  animalAge: string;
+  donationReason: string;
+  imageUrl?: string;
+}
+
+const fetchUserAds = async (userId: string) => {
+  const userDoc = await getDoc(doc(db, "users", userId));
+  if (!userDoc.exists()) throw new Error("Usuário não encontrado");
+
+  const userData = userDoc.data();
+  const adsQuery = query(collection(db, "ads"), where("userId", "==", userId));
+  const adsSnapshot = await getDocs(adsQuery);
+
+  return {
+    userName: userData.name,
+    imageUrl: userData.profilePic,
+    ads: adsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Ad[],
+  };
+};
 
 const Imagem = () => {
-  const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
   const [show, setShow] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-  const [ads, setAds] = useState([]);
-  const [editingAd, setEditingAd] = useState(null);
+  const [editingAd, setEditingAd] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const toggleModal = () => setShow(!show);
-
-  const fetchUserAds = useCallback(async (userId) => {
-    try {
-      const userDoc = await getDoc(doc(db, "users", userId));
-
-      if (!userDoc.exists()) {
-        console.error("Documento de usuário não encontrado.");
-        return;
-      }
-
-      const userData = userDoc.data();
-      setUserName(userData.name);
-      setImageUrl(userData.profilePic);
-
-      const q = query(collection(db, "ads"), where("userId", "==", userId));
-      const querySnapshot = await getDocs(q);
-
-      setAds(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    } catch (error) {
-      console.error("Erro ao buscar os dados do usuário: ", error);
-    }
-  }, []);
-
-  const handleDelete = async (adId) => {
-    try {
-      await deleteDoc(doc(db, "ads", adId));
-      setAds((prevAds) => prevAds.filter((ad) => ad.id !== adId));
-    } catch (error) {
-      console.error("Erro ao deletar o anúncio: ", error);
-    }
-  };
-
-  const handleEdit = (adId) => setEditingAd(adId);
-
-  const handleSaveEdit = async (adId, updatedData) => {
-    try {
-      await updateDoc(doc(db, "ads", adId), updatedData);
-      setEditingAd(null);
-    } catch (error) {
-      console.error("Erro ao salvar a edição: ", error);
-    }
-  };
-
-  useEffect(() => {
+  React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const userId = user.uid;
-        fetchUserAds(userId);
-      } else {
-        console.error("Usuário não está autenticado.");
-      }
+      if (user) setUserId(user.uid);
     });
-
     return () => unsubscribe();
-  }, [fetchUserAds]);
+  }, []);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["userAds", userId],
+    queryFn: () =>
+      userId ? fetchUserAds(userId) : Promise.reject("Sem usuário"),
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (adId: string) => {
+      await deleteDoc(doc(db, "ads", adId));
+    },
+    onSuccess: () => {
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ["userAds", userId] });
+      }
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: async ({
+      adId,
+      updatedData,
+    }: {
+      adId: string;
+      updatedData: Partial<Ad>;
+    }) => {
+      await updateDoc(doc(db, "ads", adId), updatedData);
+    },
+    onSuccess: () => {
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ["userAds", userId] });
+      }
+      setEditingAd(null);
+    },
+  });
+
+  const toggleModal = () => setShow(!show);
+  const closeEditModal = () => setEditingAd(null);
+
+  if (isLoading) return <p>Carregando anúncios...</p>;
+  if (isError) return <p>Erro ao carregar os anúncios. Tente novamente.</p>;
 
   return (
     <div className="con-profile">
@@ -93,7 +112,7 @@ const Imagem = () => {
         >
           +
         </Button>
-        {ads.map((ad) => (
+        {data?.ads.map((ad) => (
           <div key={ad.id} className="box-dados">
             <h3>Informações do Animal:</h3>
             {ad.imageUrl ? (
@@ -102,38 +121,52 @@ const Imagem = () => {
                 alt="Imagem do animal"
                 style={{ width: "250px", height: "200px" }}
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "default-image-url";
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "default-image-url";
                 }}
               />
             ) : (
               <p>Imagem não disponível</p>
             )}
-            <p>Nome: {ad.animalName}</p>
-            <p>Tipo: {ad.animalType}</p>
-            <p>Raça: {ad.animalBreed}</p>
-            <p>Idade: {ad.animalAge}</p>
-            <p>Motivo da doação: {ad.donationReason}</p>
-            <button className="button-dados" onClick={() => handleEdit(ad.id)}>
-              Editar
-            </button>
-            <button
-              className="button-dados"
-              onClick={() => handleDelete(ad.id)}
-            >
-              Excluir
-            </button>
+            <div className="container-info">
+              <p>Nome: {capitalizeWord(ad.animalName)}</p>
+              <p>Tipo: {capitalizeWord(ad.animalType)}</p>
+              <p>Raça: {capitalizeWord(ad.animalBreed)}</p>
+              <p>Idade: {ad.animalAge}</p>
+              <p>Motivo da doação: {capitalizeWord(ad.donationReason)}</p>
+            </div>
+            <div className="button-container">
+              <button
+                className="button-dados"
+                onClick={() => setEditingAd(ad.id)}
+              >
+                Editar
+              </button>
+              <button
+                className="button-dados"
+                onClick={() => deleteMutation.mutate(ad.id)}
+              >
+                Excluir
+              </button>
+            </div>
           </div>
         ))}
       </div>
-
+      {(show || editingAd) && (
+        <div
+          className="modal-overlay"
+          onClick={editingAd ? closeEditModal : toggleModal}
+        ></div>
+      )}
       <Dados show={show} handleClose={toggleModal} />
       {editingAd && (
         <Editdados
           show={true}
-          handleClose={() => setEditingAd(null)}
-          adData={ads.find((ad) => ad.id === editingAd)}
-          handleSave={handleSaveEdit}
+          handleClose={closeEditModal}
+          adData={data?.ads.find((ad) => ad.id === editingAd)}
+          handleSave={(adId, updatedData) =>
+            editMutation.mutate({ adId, updatedData })
+          }
         />
       )}
     </div>

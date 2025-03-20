@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.69.0",
     "bootstrap": "^5.3.2",
     "firebase": "^10.7.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
+    "react-textarea-autosize": "^8.5.7",
     "sistema-de-adocao": "file:",
     "swiper": "^11.1.14"
   },

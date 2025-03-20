@@ -87,7 +87,7 @@ const HomePage = () => {
                 alt={`Imagem do ${animal.animalType}`}
               />
             )}
-            <div className="animal-info">
+            <div className="home-animal-info">
               <div className="animal-p">
                 <p>
                   <span>Nome:</span> {animal.animalName}

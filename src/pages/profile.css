@@ -40,10 +40,15 @@
 .profile-name {
   font-size: 20px;
   font-weight: bold;
+  color: black;
+  margin-left: 0.3rem;
+  margin-right: 0.4rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .btn-logout {
   font-size: 16px;
+  margin: 1rem;
 }
 
 @media (max-width: 480px) {
