@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { db } from "./firebase-auth";
@@ -8,6 +8,7 @@ import Banner from "./banner";
 import catImg from "../assets/cat.png";
 import dogImg from "../assets/dog.png";
 import defaultImg from "../assets/animal.png";
+
 interface Animal {
   id: string;
   animalName: string;
@@ -15,63 +16,64 @@ interface Animal {
   animalAge: number;
   animalType: string;
   imageUrl?: string;
-  ownerName: string;
+  ownerName?: string;
+  userId?: string;
 }
 
+const getAnimalRepresentationImage = (animal: Animal) => {
+  switch (animal.animalType) {
+    case "Gato":
+      return catImg;
+    case "Cachorro":
+      return dogImg;
+    default:
+      return defaultImg;
+  }
+};
+
+const fetchAllAnimals = async (): Promise<Animal[]> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "ads"));
+    const animals = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Animal[];
+
+    const animalsWithOwners = await Promise.all(
+      animals.map(async (animal) => {
+        if (!animal.userId) {
+          return { ...animal, ownerName: "Desconhecido" };
+        }
+        try {
+          const userDoc = await getDoc(doc(db, "users", animal.userId));
+          const ownerName = userDoc.exists()
+            ? userDoc.data().name
+            : "Desconhecido";
+          return { ...animal, ownerName };
+        } catch {
+          return { ...animal, ownerName: "Desconhecido" };
+        }
+      })
+    );
+    return animalsWithOwners.slice(-4).reverse();
+  } catch (error) {
+    console.error("Erro ao buscar animais:", error);
+    return [];
+  }
+};
+
 const HomePage = () => {
-  const [allAnimals, setAllAnimals] = useState<Animal[]>([]);
+  const {
+    data: allAnimals = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["animals"],
+    queryFn: fetchAllAnimals,
+  });
 
-  const getAnimalRepresentationImage = (animal: Animal) => {
-    switch (animal.animalType) {
-      case "Gato":
-        return catImg;
-      case "Cachorro":
-        return dogImg;
-      default:
-        return defaultImg;
-    }
-  };
-
-  useEffect(() => {
-    const fetchAllAnimals = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "ads"));
-        const animals = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        const animalsWithOwners = await Promise.all(
-          animals.map(async (animal) => {
-            if (!animal.userId) {
-              console.error(`Animal with ID ${animal.id} has no userId`);
-              return { ...animal, ownerName: "Desconhecido" };
-            }
-            try {
-              const userDoc = await getDoc(doc(db, "users", animal.userId));
-              const ownerName = userDoc.exists()
-                ? userDoc.data().name
-                : "Desconhecido";
-              return { ...animal, ownerName };
-            } catch (userError) {
-              console.error(
-                `Error fetching user for animal ID ${animal.id}:`,
-                userError
-              );
-              return { ...animal, ownerName: "Desconhecido" };
-            }
-          })
-        );
-        const latestAnimal = animalsWithOwners.slice(-4).reverse();
-
-        setAllAnimals(latestAnimal);
-      } catch (error) {
-        console.error("Error fetching animals:", error);
-      }
-    };
-
-    fetchAllAnimals();
-  }, []);
+  if (isLoading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao carregar os animais.</p>;
 
   return (
     <div className="bg-home">
@@ -93,15 +95,13 @@ const HomePage = () => {
                   <span>Nome:</span> {animal.animalName}
                 </p>
                 <p>
-                  <span>Raça:</span>
-                  {animal.animalBreed}
+                  <span>Raça:</span> {animal.animalBreed}
                 </p>
                 <p>
                   <span>Idade:</span> {animal.animalAge}
                 </p>
                 <p>
-                  <span>Dono:</span>
-                  {animal.ownerName}
+                  <span>Dono:</span> {animal.ownerName}
                 </p>
                 <img
                   src={getAnimalRepresentationImage(animal)}
