@@ -63,7 +63,7 @@ export default function ListAnimal() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["animals"],
+    queryKey: ["all-animals"],
     queryFn: fetchAnimals,
     staleTime: 1000 * 60 * 5,
   });

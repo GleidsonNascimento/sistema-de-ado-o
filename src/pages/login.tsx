@@ -24,7 +24,11 @@ const Login = () => {
 
       history("/img");
     } catch (error) {
-      console.error("Erro no login", error.message);
+      if (error instanceof Error) {
+        console.error("Erro no login", error.message);
+      } else {
+        console.error("Erro no login", error);
+      }
     }
   };
 

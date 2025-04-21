@@ -27,6 +27,12 @@ interface Ad {
   animalAge: string;
   donationReason: string;
   imageUrl?: string;
+  location?: string;
+  size?: string;
+  sex?: string;
+  caracteristics?: string[];
+  phone?: string;
+  about?: string;
 }
 
 const fetchUserAds = async (userId: string) => {
@@ -163,7 +169,51 @@ const Imagem = () => {
         <Editdados
           show={true}
           handleClose={closeEditModal}
-          adData={data?.ads.find((ad) => ad.id === editingAd)}
+          adData={
+            data?.ads.find((ad) => ad.id === editingAd)
+              ? {
+                  id: data.ads.find((ad) => ad.id === editingAd)?.id || "",
+                  animalName:
+                    data.ads.find((ad) => ad.id === editingAd)?.animalName ||
+                    "",
+                  animalType:
+                    data.ads.find((ad) => ad.id === editingAd)?.animalType ||
+                    "",
+                  animalBreed:
+                    data.ads.find((ad) => ad.id === editingAd)?.animalBreed ||
+                    "",
+                  animalAge:
+                    data.ads.find((ad) => ad.id === editingAd)?.animalAge || "",
+                  donationReason:
+                    data.ads.find((ad) => ad.id === editingAd)
+                      ?.donationReason || "",
+                  location:
+                    data.ads.find((ad) => ad.id === editingAd)?.location || "",
+                  size: data.ads.find((ad) => ad.id === editingAd)?.size || "",
+                  sex: data.ads.find((ad) => ad.id === editingAd)?.sex || "",
+                  caracteristics:
+                    data.ads.find((ad) => ad.id === editingAd)
+                      ?.caracteristics || [],
+                  phone:
+                    data.ads.find((ad) => ad.id === editingAd)?.phone || "",
+                  about:
+                    data.ads.find((ad) => ad.id === editingAd)?.about || "",
+                }
+              : {
+                  id: "",
+                  animalName: "",
+                  animalType: "",
+                  animalBreed: "",
+                  animalAge: "",
+                  donationReason: "",
+                  location: "",
+                  size: "",
+                  sex: "",
+                  caracteristics: [],
+                  phone: "",
+                  about: "",
+                }
+          }
           handleSave={(adId, updatedData) =>
             editMutation.mutate({ adId, updatedData })
           }

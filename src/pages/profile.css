@@ -14,6 +14,17 @@
 .profile-pic:hover {
   transform: scale(1.15);
 }
+.profile-placeholder {
+  display: flex;
+  color: white;
+  cursor: pointer;
+  border-radius: 80px;
+  border: black solid 1px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.2;
+}
 
 .placeholder-pic {
   width: 92px;

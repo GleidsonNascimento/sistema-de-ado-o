@@ -56,69 +56,55 @@ const Register = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Registro</h2>
+    <div className="background-login">
+      {error && <p>{error}</p>}
 
-      {error && <p className="text-red-500 mb-2">{error}</p>}
+      <div className="con-login">
+        <h2>Registro</h2>
+        <label htmlFor="name">Nome</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          value={formData.name}
+          onChange={handleChange}
+        />
 
-      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-        Nome
-      </label>
-      <input
-        id="name"
-        name="name"
-        type="text"
-        value={formData.name}
-        onChange={handleChange}
-        className="w-full px-3 py-2 border rounded-md mb-3"
-      />
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
 
-      <label
-        htmlFor="email"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Email
-      </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        className="w-full px-3 py-2 border rounded-md mb-3"
-      />
+        <label htmlFor="password">Senha</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
 
-      <label
-        htmlFor="password"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Senha
-      </label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-        className="w-full px-3 py-2 border rounded-md mb-4"
-      />
+        <button
+          onClick={handleRegister}
+          className={`w-full bg-blue-500 text-white py-2 rounded-md ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={loading}
+        >
+          {loading ? "Registrando..." : "Registrar"}
+        </button>
 
-      <button
-        onClick={handleRegister}
-        className={`w-full bg-blue-500 text-white py-2 rounded-md ${
-          loading ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        disabled={loading}
-      >
-        {loading ? "Registrando..." : "Registrar"}
-      </button>
-
-      <p className="mt-4 text-center text-sm">
-        Já tem uma conta?{" "}
-        <Link to="/" className="text-blue-500">
-          Entrar
-        </Link>
-      </p>
+        <p className="mt-4 text-center text-sm">
+          Já tem uma conta?{" "}
+          <Link to="/" className="text-blue-500">
+            Entrar
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

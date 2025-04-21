@@ -8,6 +8,8 @@ import Banner from "./banner";
 import catImg from "../assets/cat.png";
 import dogImg from "../assets/dog.png";
 import defaultImg from "../assets/animal.png";
+import { useNavigate } from "react-router-dom";
+import { capitalizeWord } from "./utilitarios/capslock";
 
 interface Animal {
   id: string;
@@ -62,7 +64,12 @@ const fetchAllAnimals = async (): Promise<Animal[]> => {
   }
 };
 
-const HomePage = () => {
+export default function HomePage() {
+  const navigation = useNavigate();
+
+  const handleAnimalClick = (id: string) => {
+    navigation(`/animal/${id}`);
+  };
   const {
     data: allAnimals = [],
     isLoading,
@@ -82,7 +89,11 @@ const HomePage = () => {
       <h1 className="listAnimal-h1">Acabaram de ser cadastrados</h1>
       <div className="box-animalCard">
         {allAnimals.map((animal) => (
-          <div key={animal.id} className="animal-card">
+          <div
+            key={animal.id}
+            className="animal-card"
+            onClick={() => handleAnimalClick(animal.id)}
+          >
             {animal.imageUrl && (
               <img
                 src={animal.imageUrl}
@@ -92,16 +103,16 @@ const HomePage = () => {
             <div className="home-animal-info">
               <div className="animal-p">
                 <p>
-                  <span>Nome:</span> {animal.animalName}
+                  <span>Nome:</span> {capitalizeWord(animal.animalName)}
                 </p>
                 <p>
-                  <span>Raça:</span> {animal.animalBreed}
+                  <span>Raça:</span> {capitalizeWord(animal.animalBreed)}
                 </p>
                 <p>
                   <span>Idade:</span> {animal.animalAge}
                 </p>
                 <p>
-                  <span>Dono:</span> {animal.ownerName}
+                  <span>Dono:</span> {capitalizeWord(animal.ownerName)}
                 </p>
                 <img
                   src={getAnimalRepresentationImage(animal)}
@@ -120,6 +131,4 @@ const HomePage = () => {
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}

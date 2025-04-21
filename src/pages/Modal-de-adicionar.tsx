@@ -12,7 +12,13 @@ import TextareaAutosize from "react-textarea-autosize";
 import { db } from "./firebase-auth";
 import "./modal.css";
 
-const Dados = ({ show, handleClose }) => {
+const Dados = ({
+  show,
+  handleClose,
+}: {
+  show: boolean;
+  handleClose: () => void;
+}) => {
   const [animalType, setAnimalType] = useState("");
   const [animalBreed, setAnimalBreed] = useState("");
   const [animalAge, setAnimalAge] = useState("");
@@ -30,9 +36,10 @@ const Dados = ({ show, handleClose }) => {
 
   const storage = getStorage();
 
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImageFile(e.target.files[0]);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      setImageFile(files[0]);
     }
   };
 
@@ -60,7 +67,7 @@ const Dados = ({ show, handleClose }) => {
     "Treinado",
   ];
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -163,7 +170,7 @@ const Dados = ({ show, handleClose }) => {
             about,
             size,
             phone,
-            characteristics: setCharacteristics,
+            characteristics,
             imageUrl: downloadURL,
           });
 
@@ -207,6 +214,16 @@ const Dados = ({ show, handleClose }) => {
                 onChange={(e) => setAnimalType(e.target.value)}
                 placeholder="ex: cachorro, gato, passarinho"
               />
+              <select
+                value={animalType}
+                onChange={(e) => setAnimalType(e.target.value)}
+              >
+                <option value="">Qual tipo de animal?</option>
+                <option value="Gato">Gato</option>
+                <option value="Cachorro">Cachorro</option>
+                <option value="Passarinho">Passarinho</option>
+                <option value="Outros">Outros</option>
+              </select>
               <label className="label-title">Raça</label>
               <input
                 type="text"
@@ -230,7 +247,6 @@ const Dados = ({ show, handleClose }) => {
                 placeholder="fale sobre o motivo da doação"
               />
 
-              <input type="text" placeholder="ex: não tenho mais espaço" />
               <label className="label-title">Mais sobre o animal</label>
               <textarea
                 value={about}
