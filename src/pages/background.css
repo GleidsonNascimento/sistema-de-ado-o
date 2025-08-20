@@ -1,0 +1,103 @@
+.background-geral {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to right, #fff9e6, #fcefbf);
+  overflow: hidden;
+}
+
+.bg-layer {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 0;
+  pointer-events: none;
+}
+.conteudo {
+  position: relative;
+  z-index: 1;
+}
+
+.layer1 {
+  top: 20%;
+  left: 10%;
+  width: 120px;
+  height: 120px;
+  background-image: url("../src/assets/cat-background.png");
+  opacity: 0.15;
+  transform: rotate(-15deg) scale(1.1);
+}
+
+.layer2 {
+  bottom: 15%;
+  right: 12%;
+  width: 150px;
+  height: 150px;
+  background-image: url("../src/assets/dog-paw.png");
+  opacity: 0.15;
+  transform: rotate(25deg) scale(0.9);
+}
+
+.layer3 {
+  top: 50%;
+  right: 10%;
+  width: 100px;
+  height: 100px;
+  background-image: url("../src/assets/dog-background.png");
+  opacity: 0.2;
+  transform: rotate(10deg);
+}
+.layer4 {
+  bottom: 63%;
+  left: 7%;
+  width: 90px;
+  height: 90px;
+  background-image: url("../src/assets/cat-background.png");
+  opacity: 0.2;
+  transform: rotate(-30deg) scale(0.8);
+}
+.layer5 {
+  bottom: 69%;
+  left: 17%;
+  width: 90px;
+  height: 90px;
+  background-image: url("../src/assets/cat-background.png");
+  opacity: 0.2;
+  transform: rotate(-22deg) scale(0.8);
+}
+.layer6 {
+  top: 70%;
+  left: 20%;
+  width: 80px;
+  height: 80px;
+  background-image: url("../src/assets/owl.png");
+  opacity: 0.25;
+  transform: rotate(25deg) scale(1);
+}
+.layer7 {
+  top: 15%;
+  right: 5%;
+  width: 80px;
+  height: 80px;
+  background-image: url("../src/assets/bird.png");
+  opacity: 0.35;
+  transform: rotate() scale(1);
+}
+.layer8 {
+  bottom: 40%;
+  right: 56%;
+  width: 70px;
+  height: 70px;
+  background-image: url("../src/assets/dog-paw.png");
+  opacity: 0.3;
+  transform: rotate(-10deg) scale(1);
+}
+
+.layer9 {
+  top: 50%;
+  left: 10%;
+  width: 60px;
+  height: 60px;
+  background-image: url("../src/assets/bear.png");
+  opacity: 0.25;
+  transform: rotate(15deg) scale(1.5);
+}

@@ -4,7 +4,7 @@ import "./ongs.css";
 
 export default function Ong() {
   return (
-    <div className="con-bg-list">
+    <div className="background-geral">
       <Navbar />
 
       <h2 className="ong-tittle">Lista de ONGS</h2>

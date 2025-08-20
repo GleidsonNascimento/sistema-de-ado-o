@@ -83,51 +83,54 @@ export default function HomePage() {
   if (error) return <p>Erro ao carregar os animais.</p>;
 
   return (
-    <div className="bg-home">
+    <div className=".background-geral">
       <Navbar />
       <Banner />
-      <h1 className="listAnimal-h1">Acabaram de ser cadastrados</h1>
-      <div className="box-animalCard">
-        {allAnimals.map((animal) => (
-          <div
-            key={animal.id}
-            className="animal-card"
-            onClick={() => handleAnimalClick(animal.id)}
-          >
-            {animal.imageUrl && (
-              <img
-                src={animal.imageUrl}
-                alt={`Imagem do ${animal.animalType}`}
-              />
-            )}
-            <div className="home-animal-info">
-              <div className="animal-p">
-                <p>
-                  <span>Nome:</span> {capitalizeWord(animal.animalName)}
-                </p>
-                <p>
-                  <span>Raça:</span> {capitalizeWord(animal.animalBreed)}
-                </p>
-                <p>
-                  <span>Idade:</span> {animal.animalAge}
-                </p>
-                <p>
-                  <span>Dono:</span> {capitalizeWord(animal.ownerName)}
-                </p>
+      <div className="bg-home-listAnimal">
+        {" "}
+        <h1 className="listAnimal-h1">Acabaram de ser cadastrados</h1>
+        <div className="box-animalCard">
+          {allAnimals.map((animal) => (
+            <div
+              key={animal.id}
+              className="animal-card"
+              onClick={() => handleAnimalClick(animal.id)}
+            >
+              {animal.imageUrl && (
                 <img
-                  src={getAnimalRepresentationImage(animal)}
-                  alt={`Representação de um ${animal.animalType}`}
-                  className="animal-representation-image"
+                  src={animal.imageUrl}
+                  alt={`Imagem do ${animal.animalType}`}
                 />
+              )}
+              <div className="home-animal-info">
+                <div className="animal-p">
+                  <p>
+                    <span>Nome:</span> {capitalizeWord(animal.animalName)}
+                  </p>
+                  <p>
+                    <span>Raça:</span> {capitalizeWord(animal.animalBreed)}
+                  </p>
+                  <p>
+                    <span>Idade:</span> {animal.animalAge}
+                  </p>
+                  <p>
+                    <span>Dono:</span> {capitalizeWord(animal.ownerName)}
+                  </p>
+                  <img
+                    src={getAnimalRepresentationImage(animal)}
+                    alt={`Representação de um ${animal.animalType}`}
+                    className="animal-representation-image"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        <button className="button-list-animal">
-          <Link to="/ListaDeAnimais" className="no-underline">
-            Para olhar a lista completa de animais para adoção
-          </Link>
-        </button>
+          ))}
+          <button className="button-list-animal">
+            <Link to="/ListaDeAnimais" className="no-underline">
+              Para olhar a lista completa de animais para adoção
+            </Link>
+          </button>
+        </div>
       </div>
     </div>
   );

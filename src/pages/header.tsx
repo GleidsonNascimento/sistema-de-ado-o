@@ -16,7 +16,7 @@ export default function Navbar() {
         <Link to="/ListaDeAnimais">Lista de animais</Link>
       </p>
       <p>
-        <Link to="/ong">ongs pelo pais</Link>
+        <Link to="/ong">Ongs pelo pais</Link>
       </p>
       <UserProfile />
     </nav>

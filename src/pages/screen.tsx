@@ -108,7 +108,7 @@ const Imagem = () => {
   if (isError) return <p>Erro ao carregar os anúncios. Tente novamente.</p>;
 
   return (
-    <div className="con-profile">
+    <div className="background-geral">
       <Navbar />
       <div className="box-box">
         <Button

@@ -6,6 +6,7 @@ import Navbar from "./header";
 import locations from "./utilitarios/locais";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import Background from "./background";
 
 interface Animal {
   userId: string;
@@ -81,78 +82,85 @@ export default function ListAnimal() {
   };
 
   return (
-    <div className="con-bg-list">
-      <Navbar />
-      <h1>Todos os animais para adoção</h1>
+    <Background>
+      <div>
+        <Navbar />
+        <h1>Todos os animais para adoção</h1>
 
-      <div className="filter-container">
-        <label htmlFor="location-select">Localização</label>
-        <select
-          id="location-select"
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-        >
-          <option value="">Todas as localizações</option>
-          {locations.map((location, index) => (
-            <option key={index} value={location}>
-              {location}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="size-select">Tamanho:</label>
-        <select
-          id="size-select"
-          value={selectedSize}
-          onChange={(e) => setSelectedSize(e.target.value)}
-        >
-          <option value="">Todos os tamanhos</option>
-          {sizes.map((size, index) => (
-            <option key={index} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {isLoading && <p>Carregando animais...</p>}
-      {isError && <p>Erro ao carregar os animais. Tente novamente.</p>}
-
-      <div className="con-align-list">
-        {filteredAnimals.map((animal) => (
-          <div
-            className="con-list"
-            key={animal.id}
-            onClick={() => handleAnimalClick(animal.id)}
+        <div className="filter-container">
+          <label htmlFor="location-select">Localização</label>
+          <select
+            id="location-select"
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
           >
-            {animal.imageUrl && (
-              <img
-                src={animal.imageUrl}
-                alt={`Imagem do ${animal.animalType}`}
-              />
-            )}
-            <div className="con-list-info">
-              <div>
-                <p>
-                  <span>Nome:</span> {animal.animalType}
-                </p>
-                <p>
-                  <span>Raça:</span> {animal.animalBreed}
-                </p>
-                <p>
-                  <span>Idade:</span> {animal.animalAge}
-                </p>
-                <p>
-                  <span>Dono:</span> {animal.ownerName}
-                </p>
-                <p>
-                  <span>Localização:</span> {animal.location}
-                </p>
+            <option value="">Todas as localizações</option>
+            {locations.map((location, index) => (
+              <option key={index} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
+
+          <label htmlFor="size-select">Tamanho:</label>
+          <select
+            id="size-select"
+            value={selectedSize}
+            onChange={(e) => setSelectedSize(e.target.value)}
+          >
+            <option value="">Todos os tamanhos</option>
+            {sizes.map((size, index) => (
+              <option key={index} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {isLoading && <p>Carregando animais...</p>}
+        {isError && <p>Erro ao carregar os animais. Tente novamente.</p>}
+
+        <div className="con-align-list">
+          {filteredAnimals.map((animal) => (
+            <div
+              className="con-list"
+              key={animal.id}
+              onClick={() => handleAnimalClick(animal.id)}
+            >
+              {animal.imageUrl && (
+                <img
+                  src={animal.imageUrl}
+                  alt={`Imagem do ${animal.animalType}`}
+                />
+              )}
+              <div className="con-list-info">
+                <dl>
+                  <div className="animal-text">
+                    <dt>Nome:</dt>
+                    <dd>{animal.animalType}</dd>
+                  </div>
+                  <div className="animal-text">
+                    <dt>Raça:</dt>
+                    <dd>{animal.animalBreed}</dd>
+                  </div>
+                  <div className="animal-text">
+                    <dt>Idade:</dt>
+                    <dd>{animal.animalAge}</dd>
+                  </div>
+                  <div className="animal-text">
+                    <dt>Dono:</dt>
+                    <dd>{animal.ownerName}</dd>
+                  </div>
+                  <div className="animal-text">
+                    <dt>Localização:</dt>
+                    <dd>{animal.location}</dd>
+                  </div>
+                </dl>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </Background>
   );
 }

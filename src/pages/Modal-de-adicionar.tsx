@@ -208,12 +208,7 @@ const Dados = ({
                 placeholder="ex: Fido, Whiskers"
               />
               <label className="label-title">Tipo de animal</label>
-              <input
-                type="text"
-                value={animalType}
-                onChange={(e) => setAnimalType(e.target.value)}
-                placeholder="ex: cachorro, gato, passarinho"
-              />
+
               <select
                 value={animalType}
                 onChange={(e) => setAnimalType(e.target.value)}
