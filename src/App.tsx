@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import Route from "./pages/route";
 import { UserProvider } from "./pages/UserContext";
