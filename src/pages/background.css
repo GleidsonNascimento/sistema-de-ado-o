@@ -22,7 +22,7 @@
   left: 10%;
   width: 120px;
   height: 120px;
-  background-image: url("../src/assets/cat-background.png");
+  background-image: url("../assets/cat-background.png");
   opacity: 0.35;
   transform: rotate(-15deg) scale(1.1);
 }
@@ -32,7 +32,7 @@
   right: 12%;
   width: 150px;
   height: 150px;
-  background-image: url("../src/assets/dog-paw.png");
+  background-image: url("../assets/dog-paw.png");
   opacity: 0.25;
   transform: rotate(25deg) scale(0.9);
 }
@@ -42,7 +42,7 @@
   right: 10%;
   width: 100px;
   height: 100px;
-  background-image: url("../src/assets/dog-background.png");
+  background-image: url("../assets/dog-background.png");
   opacity: 0.35;
   transform: rotate(10deg);
 }
@@ -51,7 +51,7 @@
   left: 7%;
   width: 90px;
   height: 90px;
-  background-image: url("../src/assets/cat-background.png");
+  background-image: url("../assets/cat-background.png");
   opacity: 0.35;
   transform: rotate(-30deg) scale(0.8);
 }
@@ -60,7 +60,7 @@
   left: 17%;
   width: 90px;
   height: 90px;
-  background-image: url("../src/assets/cat-background.png");
+  background-image: url("../assets/cat-background.png");
   opacity: 0.35;
   transform: rotate(-22deg) scale(0.8);
 }
@@ -69,7 +69,7 @@
   left: 8%;
   width: 80px;
   height: 80px;
-  background-image: url("../src/assets/owl.png");
+  background-image: url("../assets/owl.png");
   opacity: 0.35;
   transform: rotate(25deg) scale(1);
 }
@@ -78,7 +78,7 @@
   right: 6%;
   width: 80px;
   height: 80px;
-  background-image: url("../src/assets/bird.png");
+  background-image: url("../assets/bird.png");
   opacity: 0.35;
   transform: rotate() scale(1);
 }
@@ -87,7 +87,7 @@
   right: 56%;
   width: 70px;
   height: 70px;
-  background-image: url("../src/assets/dog-paw.png");
+  background-image: url("../assets/dog-paw.png");
   opacity: 0.35;
   transform: rotate(-10deg) scale(1);
 }
@@ -97,7 +97,7 @@
   left: 9%;
   width: 60px;
   height: 60px;
-  background-image: url("../src/assets/bear.png");
+  background-image: url("../assets/bear.png");
   opacity: 0.35;
   transform: rotate(15deg) scale(1.5);
 }
