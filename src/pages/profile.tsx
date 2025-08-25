@@ -13,6 +13,9 @@ const UserProfile = () => {
   const [imageUrl, setImageUrl] = useState("");
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
+  // Ref para marcar se perfil já foi carregado da primeira vez
+  const profileLoaded = useRef(false);
+
   const handleLogout = async () => {
     const auth = getAuth();
     try {
@@ -21,6 +24,7 @@ const UserProfile = () => {
       setUser(null);
       setUserName("");
       setImageUrl("");
+      profileLoaded.current = false; // reset
       window.location.href = "/";
     } catch (error) {
       console.log("Erro ao fazer logout:", error);
@@ -32,33 +36,48 @@ const UserProfile = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        const userRef = doc(db, "users", currentUser.uid);
 
-        try {
-          const userDoc = await getDoc(userRef);
-          if (userDoc.exists()) {
-            setUserName(userDoc.data().name);
-            setImageUrl(userDoc.data().profilePic);
+        // Checa se já tem imagem em sessionStorage
+        const cachedImage = sessionStorage.getItem(
+          `profilePic_${currentUser.uid}`
+        );
+        const cachedName = sessionStorage.getItem(
+          `userName_${currentUser.uid}`
+        );
+
+        if (cachedImage && cachedName) {
+          setImageUrl(cachedImage);
+          setUserName(cachedName);
+          profileLoaded.current = true;
+        } else if (!profileLoaded.current) {
+          const userRef = doc(db, "users", currentUser.uid);
+          try {
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+              const name = userDoc.data().name;
+              const pic = userDoc.data().profilePic;
+              setUserName(name);
+              setImageUrl(pic);
+              sessionStorage.setItem(`profilePic_${currentUser.uid}`, pic);
+              sessionStorage.setItem(`userName_${currentUser.uid}`, name);
+              profileLoaded.current = true;
+            }
+          } catch (error) {
+            console.error("Erro ao buscar dados do usuário:", error);
           }
-        } catch (error) {
-          console.error("Erro ao buscar dados do usuário:", error);
         }
       } else {
         setUser(null);
         setUserName("");
         setImageUrl("");
-        sessionStorage.removeItem("userId");
+        profileLoaded.current = false;
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleClick = () => {
-    if (hiddenFileInput.current) {
-      hiddenFileInput.current.click();
-    }
-  };
+  const handleClick = () => hiddenFileInput.current?.click();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -75,29 +94,22 @@ const UserProfile = () => {
     try {
       const storageRef = ref(imagemDb, `profilePics/${user.uid}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
+
       uploadTask.on(
         "state_changed",
         null,
-        (error) => {
-          if (error instanceof Error) {
-            console.error("Erro no upload:", error.message);
-          } else {
-            console.error("Erro no upload:", error);
-          }
-        },
+        (error) => console.error("Erro no upload:", error),
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           setImageUrl(downloadURL);
+          sessionStorage.setItem(`profilePic_${user.uid}`, downloadURL);
+
           const userRef = doc(db, "users", user.uid);
           await updateDoc(userRef, { profilePic: downloadURL });
         }
       );
     } catch (error) {
-      if (error instanceof Error) {
-        console.error("Erro no upload da imagem:", error.message);
-      } else {
-        console.error("Erro no upload da imagem:", error);
-      }
+      console.error("Erro no upload da imagem:", error);
     }
   };
 
@@ -114,7 +126,7 @@ const UserProfile = () => {
             />
           ) : (
             <div className="profile-placeholder" onClick={handleClick}>
-              <h4> Selecione uma imagem</h4>
+              <h4>Selecione uma imagem</h4>
             </div>
           )}
           <input

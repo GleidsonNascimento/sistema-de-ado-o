@@ -1,10 +1,11 @@
 .profile-box {
   display: flex;
+  margin-right: 1.2rem;
 }
 
 .profile-pic {
-  width: 92px;
-  height: 92px;
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
@@ -27,8 +28,8 @@
 }
 
 .placeholder-pic {
-  width: 92px;
-  height: 92px;
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
   background-color: #ccc9c9;
   display: flex;
@@ -44,17 +45,16 @@
 }
 
 .profile-info {
-  margin-top: 15px;
+  margin-top: 5px;
   text-align: center;
 }
 
 .profile-name {
   font-size: 20px;
-  font-weight: bold;
   color: black;
   margin-left: 0.3rem;
   margin-right: 0.4rem;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: arial;
 }
 
 .btn-logout {

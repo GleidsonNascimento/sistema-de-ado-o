@@ -1,5 +1,4 @@
-// Background.tsx
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import "./Background.css";
 
 interface BackgroundProps {

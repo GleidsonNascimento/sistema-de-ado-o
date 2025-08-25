@@ -11,10 +11,10 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 1rem;
-  width: 18rem;
+  width: 18em;
   height: 35rem;
   margin: 1rem;
-  background-color: rgb(243, 243, 243);
+  background-color: rgb(238, 236, 236);
   border: 1px solid;
   border-radius: 1rem;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
@@ -23,6 +23,39 @@
   font-size: 18px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.screen-text {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+.screen-text dt {
+  font-weight: bold;
+  color: #5e5e5e;
+  font-size: 1.1rem;
+}
+
+.screen-text dd {
+  margin: 0;
+  line-height: 1.2;
+  font-size: 1rem;
+  color: #5e5e5e;
+}
+.screen-text-especial {
+  font-size: 1rem;
+}
+.screen-text-especial dt {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #5e5e5e;
+}
+.screen-text-especial dd {
+  color: #5e5e5e;
 }
 .button-dados {
   display: flex;

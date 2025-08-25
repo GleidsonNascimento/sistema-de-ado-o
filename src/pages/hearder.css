@@ -15,10 +15,13 @@
   text-decoration: none;
   color: black;
   padding: 0 10px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Comfortaa", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 30px;
 }
 .navbar a:hover {
-  color: rgb(245, 243, 242);
+  color: rgb(255, 0, 0);
   transition: 0.2s;
 }
 

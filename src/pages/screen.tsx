@@ -18,6 +18,7 @@ import Editdados from "./edit";
 import "./screen.css";
 import Navbar from "./header";
 import { capitalizeWord } from "./utilitarios/capslock";
+import Background from "./background";
 
 interface Ad {
   id: string;
@@ -108,118 +109,136 @@ const Imagem = () => {
   if (isError) return <p>Erro ao carregar os anúncios. Tente novamente.</p>;
 
   return (
-    <div className="background-geral">
-      <Navbar />
-      <div className="box-box">
-        <Button
-          className="button-addition"
-          variant="primary"
-          onClick={toggleModal}
-        >
-          +
-        </Button>
-        {data?.ads.map((ad) => (
-          <div key={ad.id} className="box-dados">
-            <h3>Informações do Animal:</h3>
-            {ad.imageUrl ? (
-              <img
-                src={ad.imageUrl}
-                alt="Imagem do animal"
-                style={{ width: "250px", height: "200px" }}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "default-image-url";
-                }}
-              />
-            ) : (
-              <p>Imagem não disponível</p>
-            )}
-            <div className="container-info">
-              <p>Nome: {capitalizeWord(ad.animalName)}</p>
-              <p>Tipo: {capitalizeWord(ad.animalType)}</p>
-              <p>Raça: {capitalizeWord(ad.animalBreed)}</p>
-              <p>Idade: {ad.animalAge}</p>
-              <p>Motivo da doação: {capitalizeWord(ad.donationReason)}</p>
+    <Background>
+      <div>
+        <Navbar />
+        <div className="box-box">
+          <Button
+            className="button-addition"
+            variant="primary"
+            onClick={toggleModal}
+          >
+            +
+          </Button>
+          {data?.ads.map((ad) => (
+            <div key={ad.id} className="box-dados">
+              <h3>Informações do Animal:</h3>
+              {ad.imageUrl ? (
+                <img
+                  src={ad.imageUrl}
+                  alt="Imagem do animal"
+                  style={{ width: "250px", height: "200px" }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "default-image-url";
+                  }}
+                />
+              ) : (
+                <p>Imagem não disponível</p>
+              )}
+              <div className="container-info">
+                <div className="screen-text">
+                  <dt>Nome:</dt>
+                  <dd>{capitalizeWord(ad.animalName)}</dd>
+                </div>
+                <div className="screen-text">
+                  <dt>Tipo:</dt> <dd>{capitalizeWord(ad.animalType)}</dd>
+                </div>
+                <div className="screen-text">
+                  <dt>Raça:</dt> <dd>{capitalizeWord(ad.animalBreed)}</dd>
+                </div>
+                <div className="screen-text">
+                  <dt>Idade: </dt>
+                  <dd>{ad.animalAge}</dd>
+                </div>
+                <div className="screen-text">
+                  <dt>Doação:</dt>
+                  <dd>{capitalizeWord(ad.donationReason)} </dd>
+                </div>
+              </div>
+              <div className="button-container">
+                <button
+                  className="button-dados"
+                  onClick={() => setEditingAd(ad.id)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="button-dados"
+                  onClick={() => deleteMutation.mutate(ad.id)}
+                >
+                  Excluir
+                </button>
+              </div>
             </div>
-            <div className="button-container">
-              <button
-                className="button-dados"
-                onClick={() => setEditingAd(ad.id)}
-              >
-                Editar
-              </button>
-              <button
-                className="button-dados"
-                onClick={() => deleteMutation.mutate(ad.id)}
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        {(show || editingAd) && (
+          <div
+            className="modal-overlay"
+            onClick={editingAd ? closeEditModal : toggleModal}
+          ></div>
+        )}
+        <Dados show={show} handleClose={toggleModal} />
+        {editingAd && (
+          <Editdados
+            show={true}
+            handleClose={closeEditModal}
+            adData={
+              data?.ads.find((ad) => ad.id === editingAd)
+                ? {
+                    id: data.ads.find((ad) => ad.id === editingAd)?.id || "",
+                    animalName:
+                      data.ads.find((ad) => ad.id === editingAd)?.animalName ||
+                      "",
+                    animalType:
+                      data.ads.find((ad) => ad.id === editingAd)?.animalType ||
+                      "",
+                    animalBreed:
+                      data.ads.find((ad) => ad.id === editingAd)?.animalBreed ||
+                      "",
+                    animalAge:
+                      data.ads.find((ad) => ad.id === editingAd)?.animalAge ||
+                      "",
+                    donationReason:
+                      data.ads.find((ad) => ad.id === editingAd)
+                        ?.donationReason || "",
+                    location:
+                      data.ads.find((ad) => ad.id === editingAd)?.location ||
+                      "",
+                    size:
+                      data.ads.find((ad) => ad.id === editingAd)?.size || "",
+                    sex: data.ads.find((ad) => ad.id === editingAd)?.sex || "",
+                    caracteristics:
+                      data.ads.find((ad) => ad.id === editingAd)
+                        ?.caracteristics || [],
+                    phone:
+                      data.ads.find((ad) => ad.id === editingAd)?.phone || "",
+                    about:
+                      data.ads.find((ad) => ad.id === editingAd)?.about || "",
+                  }
+                : {
+                    id: "",
+                    animalName: "",
+                    animalType: "",
+                    animalBreed: "",
+                    animalAge: "",
+                    donationReason: "",
+                    location: "",
+                    size: "",
+                    sex: "",
+                    caracteristics: [],
+                    phone: "",
+                    about: "",
+                  }
+            }
+            handleSave={(adId, updatedData) =>
+              editMutation.mutate({ adId, updatedData })
+            }
+          />
+        )}
       </div>
-      {(show || editingAd) && (
-        <div
-          className="modal-overlay"
-          onClick={editingAd ? closeEditModal : toggleModal}
-        ></div>
-      )}
-      <Dados show={show} handleClose={toggleModal} />
-      {editingAd && (
-        <Editdados
-          show={true}
-          handleClose={closeEditModal}
-          adData={
-            data?.ads.find((ad) => ad.id === editingAd)
-              ? {
-                  id: data.ads.find((ad) => ad.id === editingAd)?.id || "",
-                  animalName:
-                    data.ads.find((ad) => ad.id === editingAd)?.animalName ||
-                    "",
-                  animalType:
-                    data.ads.find((ad) => ad.id === editingAd)?.animalType ||
-                    "",
-                  animalBreed:
-                    data.ads.find((ad) => ad.id === editingAd)?.animalBreed ||
-                    "",
-                  animalAge:
-                    data.ads.find((ad) => ad.id === editingAd)?.animalAge || "",
-                  donationReason:
-                    data.ads.find((ad) => ad.id === editingAd)
-                      ?.donationReason || "",
-                  location:
-                    data.ads.find((ad) => ad.id === editingAd)?.location || "",
-                  size: data.ads.find((ad) => ad.id === editingAd)?.size || "",
-                  sex: data.ads.find((ad) => ad.id === editingAd)?.sex || "",
-                  caracteristics:
-                    data.ads.find((ad) => ad.id === editingAd)
-                      ?.caracteristics || [],
-                  phone:
-                    data.ads.find((ad) => ad.id === editingAd)?.phone || "",
-                  about:
-                    data.ads.find((ad) => ad.id === editingAd)?.about || "",
-                }
-              : {
-                  id: "",
-                  animalName: "",
-                  animalType: "",
-                  animalBreed: "",
-                  animalAge: "",
-                  donationReason: "",
-                  location: "",
-                  size: "",
-                  sex: "",
-                  caracteristics: [],
-                  phone: "",
-                  about: "",
-                }
-          }
-          handleSave={(adId, updatedData) =>
-            editMutation.mutate({ adId, updatedData })
-          }
-        />
-      )}
-    </div>
+    </Background>
   );
 };
 
